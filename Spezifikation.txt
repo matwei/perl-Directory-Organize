@@ -1,0 +1,129 @@
+Spezifikation: mkdir_heute
+Autor:         Mathias Weidner
+Version:       1.0
+Datum:         2009-01-05
+vim:           tw=4 sw=4 tw=70 et:
+
+Diese Spezifikation ist *nicht vollständig*.
+---------------------------------------------------------------------
+Überblick
+
+Das Programm mkdir_heute hilft, sich auf der Kommandozeile in einem
+Verzeichnisbaum zurechtzfinden. Man kann ein Verzeichnis auswählen
+oder neu anlegen. Das ausgewählte oder neu angelegte Verzeichnis wird
+über die Standardausgabe zurückgegeben, so dass man über den
+Backticks-Mechanismus der Shell (`) anschließend in das Verzeichnis
+wechseln kann.  Über die Alias-Funktion der Shell
+(bash: alias cdheute="cd `mkdir_heute`") kann das vereinfacht werden.
+---------------------------------------------------------------------
+Szenario 1
+
+Anton will nur irgendwo ein ein neues Verzeichnis anlegen. Er gibt
+'cdheute' ein.  Darauf wird eine Liste von Verzeichnissen mit
+Kurzbeschreibungen angezeigt. Er gibt '+' gefolgt von einem
+Leerzeichen und einer Kurzbeschreibung (eine Zeile) für das neue
+Verzeichnis ein. Ein neues Verzeichnis wird angelegt und über den
+Alias-Mechanismus der Shell wird das Arbeitsverzeichnis auf das neu
+angelegte gewechselt. In diesem Verzeichnis befindet sich eine Datei
+namens .project, die die eingegebene Kurzbeschreibung enthält.
+
+Szenario 2
+
+Beate will in das Verzeichnis, in dem Sie ihre Einkaufslisten
+verwaltet. Auch sie startet mit 'cdheute'. In der Zeile mit '15' in
+der ersten Spalte steht als Beschreibung 'Einkaufslisten'. Beate gibt
+'15' ein und schließt die Eingabe mit <Enter> ab. Die Shell ändert das
+Arbeitsverzeichnis auf das entsprechende Verzeichnis.
+
+Szenario 3
+
+Christian will nur wissen, wann er mit Projekt XYZ begonnen hatte.
+Auch er startet mit 'cdheute'. In der Ausgabe steht u.a. folgende
+Zeile:
+    13     : 2008/10/14  : XYZ
+Christian gibt 'q' und <Enter> ein und verbleibt damit im alten
+Arbeitsverzeichnis. Er weiss wieder, das er das Verzeichnis für XYZ am
+14.Oktober 2008 angelegt hatte.
+
+Szenario 4
+
+Dorothea hat bereits soviele Projektverzeichnisse angelegt, dass diese
+nicht alle auf einem Bildschirm angezeigt werden können. Mit 'p'
+blättert sie weiter zu älteren Verzeichnissen, mit 'f' kommt sie zu
+den ältesten Verzeichnissen. Mit 'n' kommt sie wieder zu neueren und
+mit 'l' zu den zuletzt angelegten Verzeichnissen.
+
+Szenario 5
+
+Eberhard hat ebenfalls sehr viele Projekte. Er sucht nach einem
+Projekt, welches er 2006 begonnen hatte. Nach dem Start mit 'cdheute'
+gibt er 't=2006' ein und bekommt alle Verzeichnisse, welche er 2006
+angelegt hatte. Mit 't<2006' hätte er die Verzeichnisse vor 2006
+bekommen, mit 't>2006' die Verzeichnisse nach 2006.
+
+Szenario 6
+
+Franziska erinnert sich, das es bei dem gesuchten Projekt um
+Kartoffeln ging. Nach dem Start von 'cdheute' gibt Sie '/kartoffel'
+ein, wodurch sich die Liste reduziert zu allen Verzeichnissen, in
+deren Beschreibung das Wort 'kartoffel' vorkommt.
+---------------------------------------------------------------------
+Nichtziele
+
+Das Programm 'mkdir_heute' geht davon aus, das immer nur eine Instanz
+zur gleichen Zeit neue Verzeichnisse anlegt. Es ist daher nicht
+geeignet für die Synchronisation von Verzeichnissen, die durch mehrere
+Leute im gleichen Verzeichnisbaum angelegt werden.
+---------------------------------------------------------------------
+Flowchart
+
+  +-------+
+  | Start |
+  +-------+
+    v
+  +---------------------------------------------------------+
+  | setze Beschränkungen und erstes angezeigtes Verzeichnis |
+  +---------------------------------------------------------+
+    |<-------------------------------------------------------+
+    v                                                        |
+  +-------------------------------------------------+        |
+  | lies Beschreibungen entsprechend Beschränkungen |        |
+  +-------------------------------------------------+        |
+    |<-----------------------------------------------------+ |
+    v                                                      | |
+  +-----------------------------------+                    | |
+  | Zeige Liste der Beschreibungen an |                    | |
+  +-----------------------------------+                    | |
++-->|                                                      | |
+|   v                                                      | |
+| +-------------------+                                    | |
+| | warte auf Eingabe |                                    | |
+| +-------------------+                                    | |
+|   v                                                      | |
+|   ------------------         +------------------------+  | |
+| <'f', 'l', 'n', 'p'?> --j--> | setze Startzeile neu   |--+ |
+|   ------------------         +------------------------+    |
+|   n                                                        |
+|   v                                                        |
+|  ---------                   +------------------------+    |
+| <'/', 't'?> --j------------> | setze Beschränkung neu |----+
+|  ---------                   +------------------------+ 
+|   n
+|   v
+|  ----                    +-------------------------+
+| <'q'?> --j-------------> | gib '.' aus             |--+
+|  ----                    +-------------------------+  |
+|   n                                                   |
+|   v                                                   |
+|  ---------------         +-------------------------+  |
+| <Zahl aus Liste?> --j--> | gib Verzeichnisname aus |--+
+|  ---------------         +-------------------------+  |
+|   n                                                   v
++---+                                                +------+
+                                                     | Ende |
+                                                     +------+
+---------------------------------------------------------------------
+Anzeige
+- Anzahl Zeilen entsprechend Bildschirmgröße
+
+Offen: Wie bestimme ich die aktuelle Bildschirmgröße?

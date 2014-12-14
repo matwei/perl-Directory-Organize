@@ -1,0 +1,10 @@
+^blib$
+^_build$
+^Build$
+^Directory-Organize-
+^Makefile.PL$
+^META.yml$
+^.project$
+^single$
+^t/\d\d\d\d$
+^TODO$
