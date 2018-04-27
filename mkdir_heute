@@ -23,6 +23,8 @@ use Directory::Organize;
 use Getopt::Long;
 use Term::ReadKey;
 
+use version; our $VERSION = qv('0.9.7');
+
 $|++;
 
 my %params;
