@@ -1,4 +1,3 @@
-\.mtn-ignore$
 \bDirectory-Organize\b
 \bTODO\b
 ^t/\d\d\d\d
@@ -10,7 +9,11 @@
 # Avoid version control files.
 \bRCS\b
 \bCVS\b
+^\.git$
+^\.git/
+^\.gitignore$
 \b_MTN\b
+\.mtn-ignore$
 ,v$
 \B\.svn\b
 
