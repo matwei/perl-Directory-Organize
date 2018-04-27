@@ -101,7 +101,7 @@ sub choosedir {
 
         SHOW_DESCRIPTIONS:
         while (1) {
-            show_dirs(\@directories,$listlines,$firstline);
+            show_dirs(\@directories,$params,$firstline);
 
         # let the user choose a directory
             my $input = '';
@@ -173,10 +173,12 @@ sub choosedir {
 } # choosedir()
 
 sub show_dirs {
-    my ($dirs,$listlines,$firstline) = @_;
+    my ($dirs,$params,$firstline) = @_;
+    my $listlines = $params->{listlines};
+    my $columns   = $params->{columns} - 23;
     my $i = 0;
     foreach my $dir (@$dirs) {
-        printf STDERR "%-7s: %-12s: %s\n", $i, $dir->[0], $dir->[1]
+        printf STDERR "%-7s: %-12s: %.*s\n", $i, $dir->[0], $columns, $dir->[1]
             if ($i >= $firstline);
         last if ($i - $firstline >= $listlines);
         $i++;
