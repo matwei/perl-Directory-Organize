@@ -23,7 +23,7 @@ use Directory::Organize;
 use Getopt::Long;
 use Term::ReadKey;
 
-use version; our $VERSION = qv('v0.9.8');
+use version; our $VERSION = qv('v0.9.9');
 
 $|++;
 
@@ -205,7 +205,7 @@ mkdir_heute - create and find directories interactive
 
 =head1 VERSION
 
-This documentation refers to version v0.9.8.
+This documentation refers to version v0.9.9.
 
 =head1 USAGE
 
@@ -319,10 +319,10 @@ although the program works fine when invoked directly.
 One workaround is to install the program I<resize> which comes on
 Debian GNU Linux within the package I<xutils>.
 
-If you can't install the program I<resize>, you could start I<mkdir_heute>
-with a fixed number of list lines like this
+If you can't install the program I<resize>, you could disable I<Term::ReadKey>
+at program startup like this
 
-  cd `mkdir_heute -l 25`
+  cd `mkdir_heute --notermreadkey`
 
 =head1 AUTHOR
 
