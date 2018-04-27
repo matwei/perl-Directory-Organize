@@ -36,9 +36,9 @@ print choosedir(\%params);
 sub init_params {
     my ($params) = @_;
 
-    my $clo = {};
+    my $clo = { termreadkey => 1, };
 
-    GetOptions($clo, 'basedir=s', 'listlines=i');
+    GetOptions($clo, 'basedir=s', 'columns=i', 'listlines=i', 'termreadkey!');
 
     if ($clo->{basedir}) {
         $params->{basedir} = $clo->{basedir};
@@ -47,12 +47,22 @@ sub init_params {
         $params->{basedir} = "$ENV{HOME}/A";
     }
 
-    if ($clo->{listlines}) {
-        $params->{listlines} = $clo->{listlines};
+    if ($clo->{termreadkey}) {
+        my ($wchar, $hchar, $wpixels, $hpixels) = GetTerminalSize("STDOUT");
+        $params->{columns} = defined $wchar ? $wchar  : 80;
+        $params->{listlines} = defined $hchar ? $hchar - 4 : 21;
     }
     else {
-        my ($wchar, $hchar, $wpixels, $hpixels) = GetTerminalSize("STDOUT");
-        $params->{listlines} = defined $hchar ? $hchar - 4 : 21;
+        $params->{columns} = 80;
+        $params->{listlines} = 21;
+    }
+
+    if ($clo->{columns}) {
+        $params->{columns} = $clo->{columns}
+    }
+
+    if ($clo->{listlines}) {
+        $params->{listlines} = $clo->{listlines};
     }
 
     return $params;
@@ -187,11 +197,11 @@ mkdir_heute - create and find directories interactive
 
   mkdir_heute --basedir=~/archive
 
-  mkdir_heute --listlines=15
+  mkdir_heute --listlines=15 --columns=80
 
 =head1 VERSION
 
-This documentation refers to version 0.9.
+This documentation refers to version 0.9.7.
 
 =head1 USAGE
 
@@ -258,18 +268,36 @@ directory would be created below this directory.
 
   mkdir_heute -b ~/archive
 
+=item --columns
+
+Limit the displaywidth to the given number of columns.
+
+  mkdir_heute --columns=80
+
+  mkdir_heute -c 80
+
+=back
+
 =item --listlines
 
-Since it is possible that on some systems Term::ReadKey::GetTerminalSize()
-does not deliver a meaningful value, you may skip the invocation of that
-function by providing the nummer of lines for the listing of descriptions on
-the command line.
+Limit the number of listed lines.
+This should be 4 lines less than your screen provides.
 
-  mkdir_heute --listlines=15
+  mkdir_heute --listlines=21
 
   mkdir_heute -l 15
 
 =back
+
+=item --termreadkey / --notermreadkey
+
+The size of the screen is determined by C<Term::ReadKey::GetTerminalSize()>.
+If your system has no functioning module I<Term::ReadKey>, you can switch
+this of and the programs defaults to 80 columns and 21 listlines.
+
+=back
+
+Usually 
 
 =head1 DIAGNOSTICS
 
