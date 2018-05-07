@@ -375,8 +375,7 @@ Mathias Weidner
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2009 Mathias Weidner
-(mathias@weidner.in-bad-schmiedeberg.de).
+Copyright (c) 2009-2018 Mathias Weidner (mamawe@cpan.org).
 All rights reserved.
 
 This module is free software; you can redistribute and/or modify it
