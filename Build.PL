@@ -5,6 +5,12 @@ my $build = new Module::Build(
     dist_abstract      => 'Create and Organize Directories',
     dist_author        => 'Mathias Weidner <mathias@weidner.in-bad-schmiedeberg.de>',
     license => 'perl',
+    meta_merge => {
+        resources => {
+            repository => 'https://github.com/matwei/perl-Directory-Organize',
+            bugtracker => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Directory-Organize',
+        }
+    },
     module_name => 'Directory::Organize',
     requires => {
 	'Getopt::Long'  => 0,
